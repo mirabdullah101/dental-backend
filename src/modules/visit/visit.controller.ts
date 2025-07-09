@@ -28,6 +28,28 @@ async updateVisit(@Param('visitId') visitId: number, @Body() updateVisitDto: Upd
     return this.visitService.updateVisit(visitId, updateVisitDto);
 
 }
+
+//delete visit
+@Patch(':visitId/delete')
+async deleteVisit(@Param('visitId') visitId: number): Promise<string> {
+    return this.visitService.deleteVisit(visitId);
+}
+
+//get all visits
+@Get('/all')
+async getAllVisits(): Promise<Visit[]> {
+    return this.visitService.getAllVisits();    
+}
+
+//get visits for a specific date
+@Get('/date/:date')
+async getVisitsByDate(@Param('date') date: string): Promise<Visit[]> {
+    return this.visitService.getVisitsByDate(date);
+}
+
+
+
+
 }
 
 

@@ -7,6 +7,7 @@ import {
   CreateDateColumn,
 } from 'typeorm';
 import { Visit } from 'src/modules/visit/entity/visit.entity'; 
+import { Appointment } from 'src/modules/appointment/entity/appointment.entity'
 
 @Entity('patients')
 export class Patient {
@@ -46,5 +47,11 @@ export class Patient {
 
   @OneToMany(() => Visit, (visit) => visit.patient, { cascade: true })
   visits: Visit[];
+
+  @OneToMany(() => Appointment, (appointment) => appointment.patient)
+appointments: Appointment[];
+
+  
+  
 }
 // Note: The `visits` field is optional and can be used to store related visit records.

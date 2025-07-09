@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable prettier/prettier */
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Visit } from './entity/visit.entity';
-import { Repository } from 'typeorm';
+import { Between, Repository } from 'typeorm';
 import { format } from 'date-fns';
 import { CreateVisitDto } from './dto/create-visit-dto';
 import { Patient } from '../paitent/entity/paitent.entity';
@@ -28,7 +28,7 @@ export class VisitService {
     where: { id: patientId },
     relations: ['visits'],
   });
-//   if (!patient) throw new NotFoundException('Patient not found');
+  if (!patient) throw new NotFoundException('Patient not found');
 
   const now = new Date();
 
@@ -63,6 +63,41 @@ async getVisits(patientId: number): Promise<Visit[]> {
     await this.visitRepo.update(visitId, updateVisitDto);
     return this.visitRepo.findOne({ where: { id: visitId } });
 }
+
+
+  //delete visit
+  async deleteVisit(visitId: number): Promise<string> {
+    const result = await this.visitRepo.delete(visitId);
+    if (result.affected === 0) {
+      throw new Error(`Visit with id ${visitId} not found`);
+    }
+    return `Visit with id ${visitId} deleted successfully`;
+  }
+
+  //get all visits
+  async getAllVisits(): Promise<Visit[]> {
+    return this.visitRepo.find({ order: { visitDate: 'DESC' } });
+  }
+
+  //get visits for a specific date
+  async getVisitsByDate(date: string): Promise<Visit[]> {
+    const parsedDate = new Date(date);
+    if (isNaN(parsedDate.getTime())) {
+      throw new Error('Invalid date format');
+    }
+
+    const startOfDay = new Date(parsedDate.setHours(0, 0, 0, 0));
+    const endOfDay = new Date(parsedDate.setHours(23, 59, 59, 999));
+
+    return this.visitRepo.find({
+      where: {
+        visitDate: Between(startOfDay, endOfDay),
+      },
+      order: { visitDate: 'ASC' },
+    });
+
+
+  }
 
 
 }
