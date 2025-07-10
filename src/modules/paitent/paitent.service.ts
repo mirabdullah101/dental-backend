@@ -138,6 +138,22 @@ async getVisitedLastNDays(days: number = 7): Promise<Patient[]> {
 
 }
 
+//want to get the number of patients visited for each month of the current year
+async getMonthlyVisitsCount(): Promise<{ month: string; count: number }[]> {
+    const currentYear = new Date().getFullYear();
+    const visits = await this.visitRepo.createQueryBuilder('visit')
+        .select("TO_CHAR(visit.visitDate, 'Month')", "month")
+        .addSelect('COUNT(*)', 'count')
+        .where("EXTRACT(YEAR FROM visit.visitDate) = :year", { year: currentYear })
+        .groupBy('month')
+        .orderBy('month', 'ASC')
+        .getRawMany();
+
+    return visits.map(visit => ({
+        month: visit.month.trim(), // trim to remove extra spaces
+        count: parseInt(visit.count, 10),
+    }));   
+}
 
 
 }

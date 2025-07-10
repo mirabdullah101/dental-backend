@@ -53,6 +53,15 @@ async getVisitedLastNDays(@Query('days') days: number = 7): Promise<Patient[]> {
     return this.paitentService.getVisitedLastNDays(Number(days));   
 }
 
+//get monthly visits count for each month
+//this will return an array of objects with month and count
+@Get('/monthly-visits')
+async getMonthlyVisitsCount(): Promise<{ month: string; count: number }[]> {
+    return this.paitentService.getMonthlyVisitsCount();
+}
+
+
+
 
 
 }

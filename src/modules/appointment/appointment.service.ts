@@ -68,5 +68,18 @@ async getTodayAppointments(): Promise<Appointment[]> {
       return `appointment Removed successfully`
 
   }
+
+  //get number of appoints for the day
+  async getTodayCount(): Promise<number> {
+  const today = new Date();
+  // Set time to midnight to ensure it's only the date part
+  today.setHours(0, 0, 0, 0);
+
+  const appointments= await this.appointmentRepo.find({
+    where: { appointmentDate: today },
+    order: { appointmentTime: 'ASC' },
+  });
+  return appointments.length
+}
   
 }
