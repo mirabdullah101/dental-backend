@@ -46,6 +46,7 @@ export class AppointmentController {
   async getTodayCount():Promise<number>{
     return this.appointmentService.getTodayCount()
   }
+  
 
 
 

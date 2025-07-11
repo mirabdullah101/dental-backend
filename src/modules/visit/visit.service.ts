@@ -99,6 +99,31 @@ async getVisits(patientId: number): Promise<Visit[]> {
 
   }
 
+  //async get visits for the last 7 days
+  async getVisitsLastNDays(days: number = 7): Promise<Visit[]> {
+    const today = new Date();
+    const startDate = new Date(today);
+    startDate.setDate(startDate.getDate() - days); // Set to n days ago
+
+    return this.visitRepo.find({
+      where: {
+        visitDate: Between(startDate, today),
+      },
+      relations: ['patient'], // Assuming 'patient' is the relation name in Visit entity
+      order: { visitDate: 'DESC' },
+    });
+  }
+
+
+  //get last 5 visists
+  async getLast5Visits(): Promise<Visit[]> {
+    return this.visitRepo.find({
+      order: { visitDate: 'DESC' },
+      take: 5,
+      relations: ['patient'], // Assuming 'patient' is the relation name in Visit entity
+    });
+  }
+
 
 }
 

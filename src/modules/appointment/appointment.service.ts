@@ -3,7 +3,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Appointment } from './entity/appointment.entity';
-import { Between, Repository } from 'typeorm';
+import { Between, Repository,Raw } from 'typeorm';
 import { Patient } from '../paitent/entity/paitent.entity';
 import { CreateAppointmentDto } from './dto/create-appointment-dto';
 import { UpdateAppointmentDto } from './dto/update-appointment-dto';
@@ -41,11 +41,17 @@ async addAppointment(patientId:number,dto:CreateAppointmentDto) : Promise<Appoin
 
 async getTodayAppointments(): Promise<Appointment[]> {
   const today = new Date();
-  // Set time to midnight to ensure it's only the date part
-  today.setHours(0, 0, 0, 0);
+
+  // Format to YYYY-MM-DD
+  const yyyy = today.getFullYear();
+  const mm = String(today.getMonth() + 1).padStart(2, '0');
+  const dd = String(today.getDate()).padStart(2, '0');
+  const formattedDate = `${yyyy}-${mm}-${dd}`; // e.g., "2025-07-21"
 
   return this.appointmentRepo.find({
-    where: { appointmentDate: today },
+    where: {
+      appointmentDate: Raw((alias) => `${alias} = DATE(:date)`, { date: formattedDate }),
+    },
     relations: ['patient'],
     order: { appointmentTime: 'ASC' },
   });
@@ -81,5 +87,21 @@ async getTodayAppointments(): Promise<Appointment[]> {
   });
   return appointments.length
 }
+
+//upcoming appointments count
+// async getUpcomingAppointments(): Promise<number> {
+//   const today = new Date();
+//   today.setHours(0, 0, 0, 0); // Set to start of the day
+
+//   const appointments= await this.appointmentRepo.find({
+//     where: {
+//       appointmentDate: Raw((alias) => `${alias} > DATE(:date)`, { date: today }),
+//     },
+//     relations: ['patient'],
+//     order: { appointmentDate: 'ASC', appointmentTime: 'ASC' },
+//   });
+//   return appointments.length;
+// }
+
   
 }

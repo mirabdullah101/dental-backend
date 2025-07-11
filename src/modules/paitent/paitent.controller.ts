@@ -60,6 +60,12 @@ async getMonthlyVisitsCount(): Promise<{ month: string; count: number }[]> {
     return this.paitentService.getMonthlyVisitsCount();
 }
 
+//total patient count for the month
+@Get('/total-count')
+async getTotalPatientCount(): Promise<number> {
+    return this.paitentService.getTotalPatientCount();
+}
+
 
 
 

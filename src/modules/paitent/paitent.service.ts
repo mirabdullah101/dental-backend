@@ -127,14 +127,13 @@ async getVisitedLastNDays(days: number = 7): Promise<Patient[]> {
     const startDate = new Date(today);
     startDate.setDate(startDate.getDate() - days); // Set to n days ago
 
-    const visits = await this.visitRepo.find({
+    const patients = await this.patientRepo.find({
         where: {
-            visitDate: Between(startDate, today),
+            registrationDate: Between(startDate, today),
         },
-        relations: ['patient'], // Assuming 'patient' is the relation name in Visit entity
     });
 
-    return visits.map(visit => visit.patient);
+    return patients; ;
 
 }
 
@@ -154,6 +153,28 @@ async getMonthlyVisitsCount(): Promise<{ month: string; count: number }[]> {
         count: parseInt(visit.count, 10),
     }));   
 }
+
+
+//total patient count for the current month also return the month name
+async getTotalPatientCount(): Promise<number> {
+    const currentMonth = new Date().getMonth() + 1; // getMonth() returns 0-11
+    const currentYear = new Date().getFullYear();
+
+    const count = await this.patientRepo.count({
+        where: {
+            registrationDate: Between(
+                new Date(currentYear, currentMonth - 1, 1), // Start of the month
+                new Date(currentYear, currentMonth, 0, 23, 59, 59) // End of the month
+            ),
+        },
+    });
+
+    return count;
+}
+
+
+
+
 
 
 }
