@@ -27,24 +27,24 @@ export class PaitentService {
         return this.patientRepo.save(patient);
     }
 
-//find all patients
-//implement paginatoion in this i want to show 20 patients per page
-    // async findAll() : Promise<Patient[]> {
-    //     const patients = await this.patientRepo.find();
-    //     if (!patients || patients.length === 0) {
-    //         throw new NotFoundException('No patients found');
-    //     }
-    //     return patients;
-    // }
-    async findAll(page: number = 1): Promise<Patient[]> {
-    const take = 20;
-    const skip = (page - 1) * take;
-    const patients = await this.patientRepo.find({ skip, take });
-    // if (!patients || patients.length === 0) {
-    //     throw new NotFoundException('No patients found');
-    // }
-    return patients;
+
+async findAll(page = 1, search = ''): Promise<{ patients: Patient[], totalCount: number }> {
+  const take = 20;
+  const skip = (page - 1) * take;
+
+  const [patients, totalCount] = await this.patientRepo.findAndCount({
+    where: [
+      { name: ILike(`%${search}%`) },
+    ],
+    order: { registrationDate: 'DESC' },
+    skip,
+    take,
+    relations:['visits']
+  });
+
+  return { patients, totalCount };
 }
+
 
 //delete a paitent record
 

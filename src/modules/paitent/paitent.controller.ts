@@ -14,10 +14,15 @@ async create(@Body() createPaitentDto :CreatePatientDto):Promise<Patient>{
     return this.paitentService.create(createPaitentDto)
 }
 
+//get all
 @Get('/all')
-async findAll(@Query('page') page: number = 1): Promise<Patient[]> {
-    return this.paitentService.findAll(Number(page));
-}  
+async findAll(
+  @Query('page') page: number = 1,
+  @Query('search') search: string = ''
+) {
+  return this.paitentService.findAll(Number(page), search);
+}
+
 
 @Delete('/delete/:id')
 async delete(@Param('id') id: number): Promise<string> {
