@@ -31,11 +31,12 @@ export class VisitService {
   if (!patient) throw new NotFoundException('Patient not found');
 
   const now = new Date();
+  const dateOnly = now.toISOString().slice(0, 10); // "YYYY-MM-DD"
 
   const visit = this.visitRepo.create({
     ...dto,
     visitId: (patient.visits?.length || 0) + 1,
-    visitDate: now,
+    visitDate: dateOnly,
     visitTime: format(now, 'hh:mm a'),
     patient,
   });

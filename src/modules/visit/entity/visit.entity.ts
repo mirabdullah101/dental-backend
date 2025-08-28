@@ -11,7 +11,7 @@ export class Visit {
   visitId: number;
 
   // Automatically set to current timestamp
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  @Column({ type: 'date', default: () => 'CURRENT_TIMESTAMP' })
   visitDate: Date;
 
   // Human-readable time (e.g., "11:08 AM") — set manually in service
