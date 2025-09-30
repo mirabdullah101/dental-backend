@@ -6,6 +6,7 @@ import {
   OneToMany,
   CreateDateColumn,
 } from 'typeorm';
+import { format } from 'date-fns';
 import { Visit } from 'src/modules/visit/entity/visit.entity'; 
 import { Appointment } from 'src/modules/appointment/entity/appointment.entity'
 
@@ -40,9 +41,14 @@ export class Patient {
 
   @Column({ type: 'varchar', length: 50, nullable: true })
   referredBy: string;
+//i want date to appaear in the format yyyy-mm-dd hh:mm:ss
 
   @CreateDateColumn({ type: 'timestamp' }) // auto-generated timestamp
   registrationDate: Date;
+   get formattedRegistrationDate(): string {
+    return format(this.registrationDate, 'yyyy-MM-dd HH:mm:ss');
+  }
+
 
 
   @OneToMany(() => Visit, (visit) => visit.patient, { cascade: true })
