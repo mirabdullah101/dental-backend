@@ -51,21 +51,23 @@ async findAll(page = 1, search = ''): Promise<{ patients: Patient[], totalCount:
 //also delete all visits of that patient
 
 
- async delete(id: number): Promise<string> {
+ async delete(id: number): Promise<Patient> {
     if (!id) {
         throw new Error('ID must be provided for deletion');
     }
     //find id in the records
 
-    const result=await this.patientRepo.delete(id);
-    if (!result.affected) {
+const patient = await this.patientRepo.findOneBy({ id });
+await this.patientRepo.remove(patient);
+
+    if (!patient) {
         throw new Error(`Patient with id ${id} not found`);
     }
      await this.visitRepo.delete({ patient: { id } });
 
-    if(result)return "deleted successfully"
-    
-}
+    if(patient)return  patient
+
+}   
 
 //update paitent record
 

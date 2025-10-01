@@ -25,7 +25,7 @@ async findAll(
 
 
 @Delete('/delete/:id')
-async delete(@Param('id') id: number): Promise<string> {
+async delete(@Param('id') id: number): Promise<Patient> {
     return this.paitentService.delete(id);
 }
 
