@@ -42,9 +42,15 @@ export class AppointmentController {
   }
 
   //get appointments count for the day
-  @Get('today/count')
+  @Get('today/count') 
   async getTodayCount():Promise<number>{
     return this.appointmentService.getTodayCount()
+  }
+
+  //get all appointments
+  @Get('all')
+  async getAllAppointments(): Promise<Appointment[]> {
+    return this.appointmentService.getAllAppointments();
   }
   
 

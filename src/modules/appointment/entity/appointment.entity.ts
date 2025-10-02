@@ -28,6 +28,9 @@ export class Appointment {
   @Column({ type: 'varchar', length: 255, nullable: true })
   notes: string;
 
+  @Column()
+  patientId: number;
+
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;
 

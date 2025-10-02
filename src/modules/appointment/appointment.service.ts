@@ -88,6 +88,14 @@ async getTodayAppointments(): Promise<Appointment[]> {
   return appointments.length
 }
 
+  //get all appointments
+  async getAllAppointments(): Promise<Appointment[]> {
+    return this.appointmentRepo.find({
+      relations: ['patient'],
+      order: { appointmentDate: 'ASC', appointmentTime: 'ASC' },
+    });
+  }
+
 //upcoming appointments count
 // async getUpcomingAppointments(): Promise<number> {
 //   const today = new Date();

@@ -39,7 +39,7 @@ async findAll(page = 1, search = ''): Promise<{ patients: Patient[], totalCount:
     order: { registrationDate: 'DESC' },
     skip,
     take,
-    relations:['visits']
+    relations:['visits','appointments']
   });
 
   return { patients, totalCount };

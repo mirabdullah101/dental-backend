@@ -21,14 +21,17 @@ export class Visit {
   @Column({ type: 'varchar', length: 100 })
   serviceRendered: string;
 
-  @Column({ type: 'int', default: 0 })
+  @Column({ type: 'float', default: 0 })
   totalBill: number;
 
-  @Column({ type: 'int', default: 0 })
+  @Column({ type: 'float', default: 0 })
   creditAmount: number;
 
-  @Column({ type: 'int', default: 0 })
+  @Column({ type: 'float', default: 0 })
   balanceAmount: number;
+
+  @Column()
+  patientId: number;
 
   @ManyToOne(() => Patient, (patient) => patient.visits, {
     onDelete: 'CASCADE',
